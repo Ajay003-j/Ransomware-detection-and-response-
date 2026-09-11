@@ -1,7 +1,7 @@
 .env
 __pycache__/
 secret.key
-ransomwware_test/
+ransomwware_test
 decrypt_file.py
 ransomware_detector.log
 simulate_ransomware.py
