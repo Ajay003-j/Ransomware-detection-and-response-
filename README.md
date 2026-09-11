@@ -1,6 +1,6 @@
 # Ransomware Behavior Detector
 
-A lightweight, host-based ransomware detection tool written in Python. Instead of relying on file signatures, it watches for the *behaviors* ransomware exhibits while it runs — mass file encryption, bulk renaming, backup/shadow-copy deletion, and suspicious process spawning — and responds with logging, optional email alerts, and (when enabled) process termination.
+A lightweight, host-based ransomware detection tool written in Python. Instead of relying on file signatures, it watches for the *behaviors* ransomware exhibits while it runs — mass file encryption, bulk renaming, backup/shadow-copy deletion, and suspicious process spawning - and responds with logging, optional email alerts, and (when enabled) process termination.
 
 ## Why behavior-based detection
 
@@ -26,8 +26,8 @@ This tool watches for each of those signals independently and correlates them th
 
 **Response** (`detect_ransomware.py`)
 
-- `IncidentResponder` — central point all detectors report to. Decides whether to kill a process (gated by `dry_run`) and whether to send an alert (gated by a per-key cooldown so one incident doesn't spam the inbox).
-- `AlertMailer` — sends email via SMTP (Gmail SMTP + App Password by default).
+- `IncidentResponder` - central point all detectors report to. Decides whether to kill a process (gated by `dry_run`) and whether to send an alert (gated by a per-key cooldown so one incident doesn't spam the inbox).
+- `AlertMailer` - sends email via SMTP (Gmail SMTP + App Password by default).
 
 **Entry point** (`main.py`)
 
@@ -60,7 +60,7 @@ SMTP_APP_PASSWORD=your_gmail_app_password
 ALERT_SENDER_EMAIL=your_sending_address@gmail.com
 ```
 
-> Use a Gmail **App Password**, not your account password — plain login is blocked once 2FA is enabled. Generate one under Google Account → Security → App Passwords.
+> Use a Gmail **App Password**, not your account password - plain login is blocked once 2FA is enabled. Generate one under Google Account → Security → App Passwords.
 
 If both variables are set, the script prompts for a recipient address at startup; leave it blank to run without email alerts.
 
@@ -89,11 +89,11 @@ By default it watches `./ransomware_test` (edit `path_to_watch` in `main.py` for
 
 ## Safety notes
 
-- Ships with `dry_run=True` — no process is actually killed until you flip this explicitly, after you've validated detections against your own baseline (some legitimate tools trip the entropy or process-tree checks).
+- Ships with `dry_run=True` - no process is actually killed until you flip this explicitly, after you've validated detections against your own baseline (some legitimate tools trip the entropy or process-tree checks).
 - `KNOWN_EXTENSIONS` in `ExtensionLogger` is a starter allowlist; tune it to your own file types to reduce false positives before enabling termination.
 
 ## Limitations / future work
 
-- Entropy sampling only reads the first 8KB of a file — sufficient for most ransomware payloads but can miss encryption schemes that only touch file tails or headers differently.
-- No Windows-specific shadow-copy (`vssadmin`) detection yet — `BackupLogger`'s suspicious-command list is Linux/macOS-oriented.
+- Entropy sampling only reads the first 8KB of a file - sufficient for most ransomware payloads but can miss encryption schemes that only touch file tails or headers differently.
+- No Windows-specific shadow-copy (`vssadmin`) detection yet - `BackupLogger`'s suspicious-command list is Linux/macOS-oriented.
 - Detection is host-local; no SIEM forwarding yet. Natural next step given the existing Splunk/Sysmon pipeline: forward `ransomware_detector.log` via a Universal Forwarder and build a correlating SPL dashboard alongside the brute-force detections.
